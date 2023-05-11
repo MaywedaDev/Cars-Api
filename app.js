@@ -1,15 +1,36 @@
 
+require('dotenv').config();
 
 const express = require('express')
+
+const mongoose = require('mongoose')
 
 const app = express()
 
 const PORT = 5000 || process.env.prototype
 
-app.get('', (req, res) => {
-	res.send("Hello World. This is express")
+app.use(express.static('public'))
+
+const dbURI = process.env.MONGO_URI
+
+mongoose.connect(dbURI)
+	.then((result) => { 
+		console.log('connected')
+		app.listen(PORT, () => {
+			console.log(`App listening on port ${PORT}`)
+		})
+	})
+	.catch((err) => console.log(err))
+
+app.get('/', (req, res) => {
+	res.sendFile('./products.html', { root: __dirname})
 })
 
-app.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}`)
+app.get('/about', (req, res) => {
+	res.redirect('https://www.google.com')
 })
+
+app.use((req, res) => {
+	res.status(404).send('404 page not found')
+})
+
