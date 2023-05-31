@@ -5,6 +5,8 @@ const express = require('express')
 
 const mongoose = require('mongoose')
 
+const Car = require('./models/cars')
+
 const app = express()
 
 const PORT = 5000 || process.env.prototype
@@ -21,6 +23,21 @@ mongoose.connect(dbURI)
 		})
 	})
 	.catch((err) => console.log(err))
+
+app.get('/create', (req, res) => {
+	const car  = new Car({
+		make: "BMW",
+		model: "M4",
+		transmission: "manual",
+		year: "2015",
+		cylinders: "6",
+		top_speed: 45,
+		acceleration: 10,
+		origin: "",
+		engine_type: "",
+		power: 425
+	})
+})
 
 app.get('/', (req, res) => {
 	res.sendFile('./products.html', { root: __dirname})
