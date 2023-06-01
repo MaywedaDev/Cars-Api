@@ -7,6 +7,9 @@ const carSchema = new Schema({
 		type: String,
 		required: true
 	},
+	price: {
+		type: Number
+	},
 	model: {
 		type: String,
 		required: true
@@ -42,7 +45,11 @@ const carSchema = new Schema({
     power: {
     	type: Number,
     	required: true
-    }
+    },
+	image: {
+		type: String,
+		required: true
+	}
 }, { timestamps: true })
 
 const Cars = mongoose.model('Cars', carSchema)
