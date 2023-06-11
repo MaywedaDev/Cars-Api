@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="./public/styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script defer src="/js/index.js"></script>
+    </head>
+    <body>
+        <h1>Create a car</h1>
+        <div class="carForm">
+            <form action="" name="e.target" id="e.target">
+                <div class="input-group span2">
+                    <label>Make</label>
+                    <input type="text" name="make" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Price</label>
+                    <input type="number" name="price">
+                </div>
+                <div class="input-group span2">
+                    <label>Model</label>
+                    <input type="text" name="model" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Year</label>
+                    <input type="number" name="year" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Cylinders</label>
+                    <input type="number" name="cylinders" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Top Speed</label>
+                    <input type="number" name="topSpeed" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Transmission</label>
+                    <input type="text" name="transmission" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Acceleration</label>
+                    <input type="number" name="acceleration" required>
+                </div>
+                <div class="input-group span2">
+                    <label>Origin</label>
+                    <input type="text" name="origin" id="" required>
+                </div>
+                <div class="input-group span2">
+                    <label>Engine Type</label>
+                    <input type="text" name="engineType" required>
+                </div>
+                <div class="input-group span1">
+                    <label>Power</label>
+                    <input type="number" name="power" required>
+                </div>
+                <div class="input-group span2">
+                    <label>Image</label>
+                    <div class="imgbox" id="file-upload">
+                        <p>Click to upload car image.</p>
+                    </div>
+                    <input id="fileGetter" type="file" name="image" required>
+                </div>
+                <button id="submit">Submit</button>
+            </form>
+        </div>
+
+    <script>
+        const carform = document.getElementById("e.target");
+
+        carform.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            console.log(e.target)
+
+            // const fd = new FormData()
+            const formDataObj = {
+                make: e.target.make.value,
+                price: e.target.price.value,
+                model: e.target.model.value,
+                year: e.target.year.value,
+                cylinders: e.target.cylinders.value,
+                top_speed: e.target.topSpeed.value,
+                acceleration: e.target.acceleration.value,
+                origin: e.target.origin.value,
+                engine_type: e.target.engineType.value,
+                power: e.target.power.value,
+                image: "anything",
+                transmission: e.target.transmission.value
+            }
+
+            console.log(formDataObj)
+
+            // for (let [key, value] of Object.entries(formDataObj)){
+            //     fd.append(key, value)
+            // }
+
+            // console.log([...fd])
+            
+            
+
+                    fetch('http://localhost:5000/create', {
+                    method: "POST",
+                    body: JSON.stringify(formDataObj),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then((res) => {
+                    if (res.ok){
+                        return res.json()
+                    }
+                }).then((data) => {
+                    console.log(data)
+                }).catch((error) => {
+                    console.error(error.message)
+                })
+
+        })
+    </script>
+    </body>
+</html>

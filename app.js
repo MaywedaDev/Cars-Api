@@ -5,13 +5,18 @@ const express = require('express')
 
 const mongoose = require('mongoose')
 
+const cors = require('cors')
+
 const Car = require('./models/cars')
 
 const app = express()
 
 const PORT = 5000 || process.env.prototype
 
+app.use(cors())
 app.use(express.static('public'))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 const dbURI = process.env.MONGO_URI
 
@@ -24,42 +29,53 @@ mongoose.connect(dbURI)
 	})
 	.catch((err) => console.log(err))
 
-app.get('/create', (req, res) => {
-	const car  = new Car({
-		make: "BMW",
-		model: "M4",
-		price: 65125,
-		transmission: "manual",
-		year: "2015",
-		cylinders: "6",
-		top_speed: 155,
-		acceleration: 4.2,
-		origin: "Germany",
-		engine_type: "Twin-turbocharged V6",
-		power: 425,
-		image: "https://hips.hearstapps.com/hmg-prod/images/bmw-1669908626.jpeg?crop=0.585xw:0.878xh;0.275xw,0.112xh&resize=480:*"
-	})
-
+app.post('/create', (req, res) => {
+	const car = new Car(req.body)
+	console.log(req.body)
 	car.save().then((data) => {
 		res.send(data)
 	}).catch((err) => {
 		console.log(err)
+		res.status(400).send(err)
 	})
 })
 
 app.get('/', (req, res) => {
-	res.sendFile('./products.html', { root: __dirname})
+	res.sendFile('./create.html', { root: __dirname})
 })
 
-app.get('/about', (req, res) => {
-	res.redirect('https://www.google.com')
-})
+// app.get('/about', (req, res) => {
+// 	res.redirect('https://www.google.com')
+// })
 
 app.get('/cars', (req, res) => {
 	Car.find().then((data) => {
 		res.send(data)
 	}).catch((err) => {
 		console.log(err)
+		res.status(500).send("Network or server Error")
+	})
+})
+
+app.get('/cars/:id', (req, res) => {
+	const id = req.params.id
+	console.log(id)
+	Car.findById(id).then((data) => {
+		res.send(data)
+	}).catch((err) => {
+		console.log(err)
+		res.status(404).send(err)
+	})
+})
+
+app.delete('/cars/:id', (req, res) => {
+	const id = req.params.id
+	console.log(id)
+	Car.findByIdAndDelete(id).then((data) => {
+		res.send(data)
+	}).catch((err) => {
+		console.log(err)
+		res.status(404).send(err)
 	})
 })
 
