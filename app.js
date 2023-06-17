@@ -11,6 +11,8 @@ const Car = require('./models/cars')
 
 const multer = require('multer');
 
+const cloudinary = require('./cloudinary')
+
 const upload = multer();
 
 const carRoutes = require('./routes/carsRoutes')
@@ -19,11 +21,12 @@ const app = express()
 
 const PORT = 5000 || process.env.prototype
 
+const imgToFile64 = require('./public/js/imageparser')
+
 app.use(cors())
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use(upload.array()); 
 
 const dbURI = process.env.MONGO_URI
 
@@ -36,24 +39,31 @@ mongoose.connect(dbURI)
 	})
 	.catch((err) => console.log(err))
 
-app.post('/create', (req, res) => {
-	const car = new Car(req.body)
-	console.log(req.body)
-	car.save().then((data) => {
-		res.send(data)
-	}).catch((err) => {
-		console.log(err)
-		res.status(400).send(err)
-	})
+app.post('/create', upload.single('image'), (req, res) => {
+
+	if(req.file){
+		const file64 = imgToFile64(req.file).content;
+		cloudinary.uploader.upload(file64, {overwrite: true, invalidate: true, resource_type: 'auto'})
+		.then(result => {
+			const car = new Car({...req.body, image: result.secure_url})
+
+			car.save().then((data) => {
+				res.send(data)
+			})
+		}).catch((err) => {
+			console.log(err)
+			res.status(400).send(err)
+		})
+	}else{
+		throw new Error("No valid image found")
+	}
+
 })
 
 app.get('/', (req, res) => {
 	res.sendFile('./create.html', { root: __dirname})
 })
 
-// app.get('/about', (req, res) => {
-// 	res.redirect('https://www.google.com')
-// })
 
 app.use('/cars', carRoutes)
 

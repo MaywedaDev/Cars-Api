@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <link rel="stylesheet" href="./public/styles.css">
+        <link rel="stylesheet" href="styles.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script defer src="/js/index.js"></script>
     </head>
@@ -73,7 +73,7 @@
 
             console.log(e.target)
 
-            // const fd = new FormData()
+            const fd = new FormData()
             const formDataObj = {
                 make: e.target.make.value,
                 price: e.target.price.value,
@@ -85,15 +85,16 @@
                 origin: e.target.origin.value,
                 engine_type: e.target.engineType.value,
                 power: e.target.power.value,
-                image: "anything",
                 transmission: e.target.transmission.value
             }
 
             console.log(formDataObj)
 
-            // for (let [key, value] of Object.entries(formDataObj)){
-            //     fd.append(key, value)
-            // }
+            for (let [key, value] of Object.entries(formDataObj)){
+                fd.append(key, value)
+            }
+            console.log(e.target.image.files[0])
+            fd.append('image', e.target.image.files[0])
 
             // console.log([...fd])
             
@@ -101,10 +102,7 @@
 
                     fetch('http://localhost:5000/create', {
                     method: "POST",
-                    body: JSON.stringify(formDataObj),
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
+                    body: fd
                 }).then((res) => {
                     if (res.ok){
                         return res.json()
