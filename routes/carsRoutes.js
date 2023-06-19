@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
 	const id = req.params.id
-	console.log(id)
+	console.log(id)  
 
 	Car.findByIdAndDelete(id).then((data) => {
 		res.send(data)

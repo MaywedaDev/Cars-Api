@@ -88,12 +88,12 @@
                 transmission: e.target.transmission.value
             }
 
-            console.log(formDataObj)
+            // console.log(formDataObj)
 
             for (let [key, value] of Object.entries(formDataObj)){
                 fd.append(key, value)
             }
-            console.log(e.target.image.files[0])
+            // console.log(e.target.image.files[0])
             fd.append('image', e.target.image.files[0])
 
             // console.log([...fd])
