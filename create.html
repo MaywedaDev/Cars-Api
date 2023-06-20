@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script defer src="/js/index.js"></script>
     </head>
-    <body>
+    <body id="create">
         <h1>Create a car</h1>
         <div class="carForm">
             <form action="" name="e.target" id="e.target">
@@ -109,6 +109,9 @@
                     }
                 }).then((data) => {
                     console.log(data)
+                    if(data.success){
+                        window.location.href = "/"
+                    }
                 }).catch((error) => {
                     console.error(error.message)
                 })

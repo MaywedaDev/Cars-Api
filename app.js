@@ -27,6 +27,7 @@ app.use(cors())
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.set('view engine', 'ejs')
 
 const dbURI = process.env.MONGO_URI
 
@@ -48,11 +49,11 @@ app.post('/create', upload.single('image'), (req, res) => {
 			const car = new Car({...req.body, image: result.secure_url})
 
 			car.save().then((data) => {
-				res.send(data)
+				res.status(200).send({success: true, message: "Car is created sucessfully"})
 			})
 		}).catch((err) => {
 			console.log(err)
-			res.status(400).send(err)
+			res.status(400).send({success: false, message: err.message })
 		})
 	}else{
 		throw new Error("No valid image found")
@@ -60,8 +61,15 @@ app.post('/create', upload.single('image'), (req, res) => {
 
 })
 
-app.get('/', (req, res) => {
+app.get('/create', (req, res) => {
 	res.sendFile('./create.html', { root: __dirname})
+})
+
+app.get('/', (req, res) => {
+	
+	Car.find().then((result) => {
+		res.render('index', {title: "Cars Api Frontend", cars: result})
+	})
 })
 
 
