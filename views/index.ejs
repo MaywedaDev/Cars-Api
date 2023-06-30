@@ -5,8 +5,14 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div>Hello World</div>
-        <div>These are the cars</div>
+        <div class="header">
+            <h3>Welcome</h3>
+            <h1>These are the cars</h1>
+        </div>
+
+        <div class="create">
+            <a href="/create">Add a car</a>
+        </div>
         <div class="cars_list">
             <% if (cars.length > 0) { %>
                 <% cars.forEach((car) => { %>
@@ -25,7 +31,7 @@
             <% } else { %>
                 <p>There are no cars to display...</p>
             <% } %>
-            
+            <!-- Hello -->
         </div>
     </body>
 </html>
